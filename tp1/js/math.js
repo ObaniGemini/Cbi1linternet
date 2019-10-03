@@ -190,4 +190,19 @@ class MM {
 	static nthRoot(value, root) {
 		return Math.pow(value, 1 / root);
 	}
+
+	/**
+	 * @export
+	 * @method gcd: 
+	 * @param {number} a: 
+	 * @param {number} b: 
+	 * @return {number}
+	 */
+	static gcd( a, b ) {
+  		while( b ) {
+    		let tmp = b;
+    		b = a % b;
+    		a = tmp;
+  		} return a;
+	}
 }
