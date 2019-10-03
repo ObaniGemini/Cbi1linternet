@@ -38,6 +38,7 @@ const main = event => {
 function clickEvent( event ) {
 	console.log(event.clientX);
 	console.log(event.clientY);
+
 	if( animating ) {
 		//speed up
 	} else {
@@ -55,12 +56,27 @@ function clickEvent( event ) {
 
 const draw = () => {
 	console.log(pics[current].getAttribute("src")); //test
-	if( i++ < 60 ) {
-		requestAnimationFrame(draw);
+	let W = window.innerWidth;
+	let H = window.innerHeight;
+	if( ++i < 60 ) {
+		let canvas = document.getElementById("canvas");
+		let context = canvas.getContext("2d");
+		let imW = pics[current].naturalWidth;
+		let imH = pics[current].naturalHeight;
+		console.log(imW);
+		console.log(imH);
+
+
+		context.drawImage(pics[current], imW/2 - i*imW/120, imH/2 - i*imH/120,
+										 i*imW/60, i*imH/60,
+										 W/2 - i*W/120, H/2 - i*H/120,
+										 i*W/60, i*H/60);
+
+		window.requestAnimationFrame(draw);
 	} else {
 		let canvas = document.getElementById("canvas");
 		let context = canvas.getContext("2d");
-		context.drawImage(pics[current], 0, 0);
+		context.drawImage(pics[current], 0, 0, W, H);
 		animating = false
 		i = 0
 	}
