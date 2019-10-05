@@ -1,27 +1,28 @@
 const imgSrc = ["images/image1.jpg", "images/image2.jpg"];
 const lastF = 60, lastF2 = 120; //lastFrames
 var pics = [];
-var current = 0;
-var animating = false;
-
-
 var canvas;
 var context;
 
-var i = 0;
+var current = 0;
+var f = lastF2 + 1;
+var step = 1;
+
 var W, H;
 var cW, cH;
 var cWn, cHn;
+var clientX, clientY;
 
 
 
 window.addEventListener("load", event => {
-	console.log("loaded");
 	main();
 });
 
 
 window.addEventListener("click", clickEvent );
+window.addEventListener("mousedown", event => { step = 2; } );
+window.addEventListener("mouseup", event => { step = 1; } );
 
 
 window.addEventListener("resize", event => { updateImg(); } );
@@ -45,16 +46,12 @@ const main = event => {
 }
 
 
-
-
 function clickEvent( event ) {
-	console.log(event.clientX);
-	console.log(event.clientY);
+	clientX = Math.round(event.clientX/cW);
+	clientY = Math.round(event.clientY/cH);
 
-	if( animating ) {
-		//speed up
-	} else {
-		animating = true;
+	if( f >= lastF2 ) {
+		f = 0;
 		current++;
 		if( current == pics.length ) {
 			current = 0;
@@ -67,25 +64,43 @@ function clickEvent( event ) {
 
 
 const draw = () => {
-	console.log(pics[current].getAttribute("src")); //test
-	if( i++ <= lastF ) {
+	if( f < lastF2 ) {
 		let imW = pics[current].naturalWidth/cWn;
 		let imH = pics[current].naturalHeight/cHn;
 
-		for( let j = 1; j <= cWn; j++ ) {
-			for( let k = 1; k <= cHn; k++ ) {
+		for( let posX = clientX - f; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
+			if( posX < 0 ) {
+				continue;
+			}
+
+			let sizeX = f - Math.abs(posX - clientX)*3;
+
+			for( let posY = clientY - f - 1; posY <= (clientY + f) && posY <= cHn; posY++ ) {
+				if( posY < 0 ) {
+					continue;
+				}
+
+				let sizeY = f - Math.abs(posY - clientY)*3;
+
+				if( sizeY < sizeX ) { //make the progression squarish
+					sizeY = sizeX;
+				}
+
+				if( sizeY > lastF+step || sizeY <= 0 ) { //if already drawn or not to be drawn
+					continue;
+				}
+
 				context.drawImage(pics[current], 
-					j*imW - imW*i/lastF2 - imW/2, k*imH - imH*i/lastF2 - imH/2,
-					i*imW/lastF, i*imH/lastF,
-					j*cW - cW*i/lastF2 - cW/2, k*cH - cH*i/lastF2 - cH/2,
-					i*cW/lastF, i*cH/lastF);
+					posX*imW - imW*sizeY/lastF2 - imW/2, posY*imH - imH*sizeY/lastF2 - imH/2,
+					sizeY*imW/lastF, sizeY*imH/lastF,
+					posX*cW - cW*sizeY/lastF2 - cW/2, posY*cH - cH*sizeY/lastF2 - cH/2,
+					sizeY*cW/lastF, sizeY*cH/lastF);
 			};
 		};
 
+		f += step;
+
 		window.requestAnimationFrame(draw);
-	} else {
-		animating = false;
-		i = 0;
 	}
 }
 
