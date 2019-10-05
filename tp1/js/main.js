@@ -1,49 +1,39 @@
 const imgSrc = ["images/image1.jpg", "images/image2.jpg"];
 const lastF = 60, lastF2 = 120; //lastFrames
 var pics = [];
-var canvas;
-var context;
 
-var current = 0;
-var f = lastF2 + 1;
-var step = 1;
+var canvas;			//canvas object
+var context;		//canvas's context
 
-var W, H;
-var cW, cH;
-var cWn, cHn;
-var clientX, clientY;
+var current = 0;	//current pic index
+var f = lastF2 + 1; //frame number
+var step = 1;		//frame step
 
-
-
-window.addEventListener("load", event => {
-	main();
-});
-
-
-window.addEventListener("click", clickEvent );
-window.addEventListener("mousedown", event => { step = 2; } );
-window.addEventListener("mouseup", event => { step = 1; } );
-
-
-window.addEventListener("resize", event => { updateImg(); } );
+var cW, cH;				//cell Width, Height
+var cWn, cHn;			//cell number in screen ( for widht and height )
+var clientX, clientY;	//client mouse click
 
 
 
-const main = event => {
-	imgSrc.forEach( (element) => {
+
+const main = () => {
+	canvas = document.createElement("canvas");					//create canvas and add it to the page
+	canvas.setAttribute("id", "canvas");
+	context = canvas.getContext("2d");
+	document.body.appendChild(canvas);
+
+
+	imgSrc.forEach( (element) => {								//add picture objects to array
 		let img = document.createElement("img");
 		img.setAttribute("src", element);
 		pics.push(img);
 	})
 
 
-	canvas = document.createElement("canvas");
-	canvas.setAttribute("id", "canvas");
-	context = canvas.getContext("2d");
-	document.body.appendChild(canvas);
-
-	updateImg();
+	updateImg();												//update canvas parameters
 }
+
+
 
 
 function clickEvent( event ) {
@@ -60,6 +50,7 @@ function clickEvent( event ) {
 		window.requestAnimationFrame(draw);
 	}
 }
+
 
 
 
@@ -104,31 +95,41 @@ const draw = () => {
 	}
 }
 
-const updateImg = event => {
-	W = window.innerWidth;
-	H = window.innerHeight;
 
-	
-	function setCScale( fact, maxSizeFact, maxSize ) {
+
+
+const updateImg = () => {
+	function setNumCells( otherAxisCellNum, maxSizeOtherAxis, maxSizeAxis ) {		//Set the number of an axis depending of the other axis and of its axis's size
 		let i = 0;
-		let tmp = maxSizeFact/fact
-		while( (++i)*tmp < maxSize );
-		return Math.abs(i*tmp - maxSize) < Math.abs((i-1)*tmp - maxSize) ? i : i-1;
+		let tmp = maxSizeOtherAxis/otherAxisCellNum;
+		while( (++i)*tmp < maxSizeAxis );
+		return Math.abs(i*tmp - maxSizeAxis) < Math.abs((i-1)*tmp - maxSizeAxis) ? i : i-1;
 	}
 
 
-	if( W > H ) {
+	if( window.innerWidth > window.innerHeight ) {	//20 cells maximum per axis, in height or width
 		cWn = 20;
-		cHn = setCScale( cWn, W, H );
+		cHn = setNumCells( cWn, window.innerWidth, window.innerHeight );
 	} else {
 		cHn = 20;
-		cWn = setCScale( cHn, H, W );
+		cWn = setNumCells( cHn, window.innerHeight, window.innerWidth );
 	}
 
-	cW = W/cWn;
-	cH = H/cHn;
+	cW = window.innerWidth/cWn;		//Set cells size
+	cH = window.innerHeight/cHn;
 
-	canvas.setAttribute("width", W);
-	canvas.setAttribute("height", H);
-	context.drawImage(pics[current], 0, 0, W, H);
+	canvas.setAttribute("width", window.innerWidth);	//Set canvas size
+	canvas.setAttribute("height", window.innerHeight);
+
+	context.drawImage(pics[current], 0, 0, window.innerWidth, window.innerHeight);	//Draw image if resize, this will messup animation anyway if we care about it
 }
+
+
+
+
+
+window.addEventListener("load", main );			//page load
+window.addEventListener("click", clickEvent );					//start animation
+window.addEventListener("mousedown", () => { step = 2; } );	//Speed up animation
+window.addEventListener("mouseup", () => { step = 1; } );	//Slow down animation
+window.addEventListener("resize", updateImg );	//resize image
