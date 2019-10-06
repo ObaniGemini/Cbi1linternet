@@ -5,7 +5,7 @@ var pics = [];
 var current = 0;	//current pic index
 var animation = 0;
 
-var f = lastF2 + 1; //frame number
+var f = lastF2; //frame number
 var step = 1;		//frame step
 
 var cW, cH;				//cell Width, Height
@@ -39,8 +39,10 @@ const main = () => {
 
 
 function clickEvent( event ) {
-	clientX = Math.round(event.clientX/cW);
-	clientY = Math.round(event.clientY/cH);
+	if( f < lastF || f >= lastF2 ) {
+		clientX = Math.round(event.clientX/cW);
+		clientY = Math.round(event.clientY/cH);
+	}
 
 	if( f >= lastF2 ) {
 		f = 0;
@@ -62,14 +64,14 @@ const draw = () => {
 		let imH = pics[current].naturalHeight/cHn;
 		let finished = true;
 
-		for( let posX = clientX - f - 1; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
+		for( let posX = clientX - f; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
 			if( posX < 0 ) {
 				continue;
 			}
 
 			let sizeX = f - Math.abs(posX - clientX)*3;
 
-			for( let posY = clientY - f - 1; posY <= (clientY + f) && posY <= cHn; posY++ ) {
+			for( let posY = clientY - f; posY <= (clientY + f) && posY <= cHn; posY++ ) {
 				if( posY < 0 ) {
 					continue;
 				}
