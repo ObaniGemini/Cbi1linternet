@@ -60,8 +60,9 @@ const draw = () => {
 	if( f < lastF2 ) {
 		let imW = pics[current].naturalWidth/cWn;
 		let imH = pics[current].naturalHeight/cHn;
+		let finished = true;
 
-		for( let posX = clientX - f; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
+		for( let posX = clientX - f - 1; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
 			if( posX < 0 ) {
 				continue;
 			}
@@ -88,12 +89,18 @@ const draw = () => {
 					sizeY*imW/lastF, sizeY*imH/lastF,
 					posX*cW - cW*sizeY/lastF2 - cW/2, posY*cH - cH*sizeY/lastF2 - cH/2,
 					sizeY*cW/lastF, sizeY*cH/lastF);
+
+				finished = false;
 			};
 		};
 
-		f += step;
 
-		window.requestAnimationFrame(draw);
+		if( finished && f > 1 ) {
+			f = lastF2;
+		} else {
+			f += step;
+			window.requestAnimationFrame(draw);
+		}
 	}
 }
 
@@ -131,7 +138,6 @@ const updateImg = () => {
 
 
 window.addEventListener("load", main );			//page load
-window.addEventListener("click", clickEvent );					//start animation
-window.addEventListener("mousedown", () => { step = 2; } );	//Speed up animation
+window.addEventListener("mousedown", () => { step = 2; clickEvent(event) } );	//Speed up animation
 window.addEventListener("mouseup", () => { step = 1; } );	//Slow down animation
 window.addEventListener("resize", updateImg );	//resize image
