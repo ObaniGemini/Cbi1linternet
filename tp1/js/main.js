@@ -1,17 +1,19 @@
-const imgSrc = ["images/image1.jpg", "images/image2.jpg"];
+const imgSrc = ["images/image1.jpg", "images/image2.jpg", "images/image3.jpg", "images/image4.jpg", "images/image5.jpg", "images/image6.jpg", "images/image7.jpg"];
 const lastF = 60, lastF2 = 120; //lastFrames
+
 var pics = [];
-
-var canvas;			//canvas object
-var context;		//canvas's context
-
 var current = 0;	//current pic index
+var animation = 0;
+
 var f = lastF2 + 1; //frame number
 var step = 1;		//frame step
 
 var cW, cH;				//cell Width, Height
 var cWn, cHn;			//cell number in screen ( for widht and height )
 var clientX, clientY;	//client mouse click
+
+var canvas;			//canvas object
+var context;		//canvas's context
 
 
 
@@ -29,8 +31,8 @@ const main = () => {
 		pics.push(img);
 	})
 
-
-	updateImg();												//update canvas parameters
+	updateImg();
+	clickEvent(new MouseEvent("click", {"clientX": window.innerWidth/2, "clientY":window.innerHeight/2}));												//update canvas parameters
 }
 
 
