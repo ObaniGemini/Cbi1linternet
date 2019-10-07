@@ -3,7 +3,6 @@ const lastF = 60, lastF2 = 120; //lastFrames
 
 var pics = [];
 var current = 0;	//current pic index
-var animation = 0;
 
 var f = lastF2; //frame number
 var step = 1;		//frame step
@@ -140,6 +139,6 @@ const updateImg = () => {
 
 
 window.addEventListener("load", main );			//page load
-window.addEventListener("mousedown", () => { step = 2; clickEvent(event) } );	//Speed up animation
+window.addEventListener("mousedown", (event) => { step = 2; clickEvent(event) } );	//Speed up animation
 window.addEventListener("mouseup", () => { step = 1; } );	//Slow down animation
 window.addEventListener("resize", updateImg );	//resize image
