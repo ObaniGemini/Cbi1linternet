@@ -87,7 +87,7 @@ const draw = () => {
 					continue;
 				}
 
-				if( (sizeY/(lastF*0.6) <= 1 ) ) {
+				if( (sizeY/((lastF+step)*0.6) <= 1 ) ) { //draw black rectangles
 					context.fillRect(	posX*cW - cW*sizeY/(lastF2*0.6) - cW/2,
 										posY*cH - cH*sizeY/(lastF2*0.6) - cH/2,
 										sizeY*cW/(lastF*0.6),
