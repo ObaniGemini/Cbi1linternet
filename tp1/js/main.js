@@ -21,6 +21,7 @@ const main = () => {
 	canvas = document.createElement("canvas");					//create canvas and add it to the page
 	canvas.setAttribute("id", "canvas");
 	context = canvas.getContext("2d");
+	context.fillStyle = '#000';
 	document.body.appendChild(canvas);
 
 
@@ -63,6 +64,7 @@ const draw = () => {
 		let imH = pics[current].naturalHeight/cHn;
 		let finished = true;
 
+
 		for( let posX = clientX - f; posX <= (clientX + f) && posX <= cWn ; posX++ ) {
 			if( posX < 0 ) {
 				continue;
@@ -81,8 +83,15 @@ const draw = () => {
 					sizeY = sizeX;
 				}
 
-				if( sizeY > lastF+step || sizeY <= 0 ) { //if already drawn or not to be drawn
+				if( (sizeY/(lastF+step)) > 1 || sizeY <= 0 ) { //if already drawn or not to be drawn
 					continue;
+				}
+
+				if( (sizeY/(lastF*0.6) <= 1 ) ) {
+					context.fillRect(	posX*cW - cW*sizeY/(lastF2*0.6) - cW/2,
+										posY*cH - cH*sizeY/(lastF2*0.6) - cH/2,
+										sizeY*cW/(lastF*0.6),
+										sizeY*cH/(lastF*0.6) );
 				}
 
 				context.drawImage(pics[current], 
