@@ -1,5 +1,11 @@
 const PI2 = 2*3.14159;
 
+var canvas;
+var context;
+
+
+
+
 class Point {
 	constructor(x, y) {
 	    this.x = x;
@@ -16,6 +22,8 @@ class Circle {
 }
 
 
+
+
 function sq( x ) { return x * x; }
 
 function getRandomInt(max) {
@@ -24,30 +32,15 @@ function getRandomInt(max) {
 
 
 
+
 const main = () => {
-	let canvas = document.createElement("canvas");
+	var canvas = document.createElement("canvas");
 	canvas.id = "canvas";
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-
-	let P1 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
-	let P2 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
-	let P3 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
-	let circle = findCircle( P1, P2, P3 );
-
-	let context = canvas.getContext("2d");
-	context.fillStyle = '#000';
-	context.beginPath();
-	context.arc(circle.cx, circle.cy, circle.r, 0, PI2, false);
-	context.fill();
-
-	context.fillStyle = '#f00';
-	context.fillRect( P1.x - 10, P1.y - 10, 20, 20 );
-	context.fillStyle = '#0f0';
-	context.fillRect( P2.x - 10, P2.y - 10, 20, 20 );
-	context.fillStyle = '#00f';
-	context.fillRect( P3.x - 10, P3.y - 10, 20, 20 );
+	var context = canvas.getContext("2d");
 	document.body.appendChild(canvas);
+	clickEvent();
 }
 
 
@@ -62,8 +55,6 @@ function findCircle( p1, p2, p3 ) {
 			 );
 
 	let cy = ((sq(p2.x) - sq(p1.x) + sq(p2.y) - sq(p1.y))/(2*(p2.y - p1.y))) - ((p2.x - p1.x)/(p2.y - p1.y))*cx;
-	
-
 
 	let r = Math.sqrt(sq(p1.x - cx) + sq(p1.y - cy));
 
@@ -71,4 +62,30 @@ function findCircle( p1, p2, p3 ) {
 }
 
 
+
+
+const clickEvent = () => {
+	let P1 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
+	let P2 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
+	let P3 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
+	let circle = findCircle( P1, P2, P3 );
+
+	context.clearRect( 0, 0, canvas.width, canvas.height );
+	context.fillStyle = '#000';
+	context.beginPath();
+	context.arc(circle.cx, circle.cy, circle.r, 0, PI2, false);
+	context.fill();
+
+	context.fillStyle = '#f00';
+	context.fillRect( P1.x - 10, P1.y - 10, 20, 20 );
+	context.fillStyle = '#0f0';
+	context.fillRect( P2.x - 10, P2.y - 10, 20, 20 );
+	context.fillStyle = '#00f';
+	context.fillRect( P3.x - 10, P3.y - 10, 20, 20 );
+}
+
+
+
 window.addEventListener("load", main );
+window.addEventListener("mousedown", clickEvent);
+window.addEventListener("wheel", clickEvent);
