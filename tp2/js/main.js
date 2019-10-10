@@ -2,6 +2,7 @@ const PI2 = 2*3.14159;
 
 var canvas;
 var context;
+var circle;
 
 
 
@@ -34,13 +35,21 @@ function getRandomInt(max) {
 
 
 const main = () => {
-	var canvas = document.createElement("canvas");
+	canvas = document.createElement("canvas");
 	canvas.id = "canvas";
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	var context = canvas.getContext("2d");
+	context = canvas.getContext("2d");
+	resizeCanvas();
 	document.body.appendChild(canvas);
 	clickEvent();
+}
+
+
+const resizeCanvas = () => {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	if( circle != null ) {
+		drawCircle();
+	}
 }
 
 
@@ -62,19 +71,23 @@ function findCircle( p1, p2, p3 ) {
 }
 
 
+const drawCircle = () => {
+	context.clearRect( 0, 0, canvas.width, canvas.height );
+	context.fillStyle = '#000';
+	context.beginPath();
+	context.arc(circle.cx, circle.cy, circle.r, 0, PI2, false);
+	context.fill();
+}
+
 
 
 const clickEvent = () => {
 	let P1 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
 	let P2 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
 	let P3 = new Point( getRandomInt(canvas.width), getRandomInt(canvas.height) );
-	let circle = findCircle( P1, P2, P3 );
+	circle = findCircle( P1, P2, P3 );
 
-	context.clearRect( 0, 0, canvas.width, canvas.height );
-	context.fillStyle = '#000';
-	context.beginPath();
-	context.arc(circle.cx, circle.cy, circle.r, 0, PI2, false);
-	context.fill();
+	drawCircle();
 
 	context.fillStyle = '#f00';
 	context.fillRect( P1.x - 10, P1.y - 10, 20, 20 );
@@ -87,5 +100,6 @@ const clickEvent = () => {
 
 
 window.addEventListener("load", main );
+window.addEventListener("resize", resizeCanvas );
 window.addEventListener("mousedown", clickEvent);
 window.addEventListener("wheel", clickEvent);
